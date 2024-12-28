@@ -1,0 +1,12 @@
+[Unit]
+Description=Inotify Rclone Sync Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/inotify-rclone-sync.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

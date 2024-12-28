@@ -1,0 +1,55 @@
+#!/bin/bash
+
+CONFIG_FILE="/etc/rclone-sync/sync.conf"
+RCLONE_CONFIG="/root/.config/rclone/rclone.conf"
+RCLONE_LOCAL_CONFIG="/home/$SUDO_USER/.config/rclone/rclone.conf"
+USUARIO_ORIGINAL="$SUDO_USER"
+
+
+confirm () {
+	read confirm && [[ $confirm == [yYsS] ]]
+}
+
+check_sudo() {
+	if [ ! `whoami` = root ]; then
+		echo "Para configurar o serviço, é necessário executar o comando como root!"
+		exit
+	fi
+}
+
+case "$1" in
+    config)
+		check_sudo
+        if [ ! -f "$RCLONE_CONFIG" ]; then
+        	if [ ! -f "$RCLONE_LOCAL_CONFIG" ]; then
+				echo "Arquivo de configuração do rclone não encontrado. Iniciando configuração..."
+            	rclone config
+			else
+				echo -e "Foi encontrado um arquivo de configuração do rclone para o usuário atual.\nDeseja copiá-lo para uso como root? [Y/n]"
+				if confirm; then
+					mkdir /root/.config/rclone
+					cp $RCLONE_LOCAL_CONFIG /root/.config/rclone/rclone.conf
+				else
+					echo "Arquivo de configuração do rclone não encontrado. Iniciando configuração..."
+					rclone config
+				fi
+			fi
+				#echo "É necessário configurar o rclone para iniciar o serviço, execute novamente e conclua a configuração"
+       	else
+	   		echo "Arquivo de configuração do rclone já existe."
+        fi
+        ;;
+    dir)
+		echo "A partir da lista de locais remotos, configure um novo diretório para incluir no sync"
+		rclone listremotes
+        read -p "Digite o diretório local: " local_dir
+        read -p "Digite o diretório remoto: " remote_dir
+        echo "$local_dir $remote_dir" >> "$CONFIG_FILE"
+        echo "Diretórios adicionados à configuração."
+        ;;
+    *)
+        echo "Uso: sync-rclone {config|dir}"
+        exit 1
+        ;;
+esac
+
