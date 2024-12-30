@@ -15,7 +15,7 @@ while IFS=' ' read -r local_dir remote_dir; do
     /usr/bin/inotifywait -m -r -e modify,create,delete,move "$local_dir" |
     while read -r directory events filename; do
         # Executar o comando de sincronização do rclone
-        /usr/bin/rclone sync --config "$RCLONE_CONFIG" "$local_dir" "$remote_dir"
+		/usr/bin/rclone sync -v --config "$RCLONE_CONFIG" "$local_dir" "$remote_dir" --syslog ## Loglevel: default (Error, Notice); -q (E); -v (E, N, I), -vv (E, N, I, D)
     done &
 done < "$CONFIG_FILE"
 
