@@ -1,13 +1,13 @@
 # Rclone Sync Service
-### Serviço de sincronização de diretórios usando inotify e rclon
+### Directory sync service using inotify and rclone. Installs a service to synchronize directories with some remote (like Google Drive) using inotify and rclone.
 
-## Instalação 
+## Install
 
 ```
 sudo dpkg -i rclone-sync-package.deb
 ```
 
-## Uso
+## Usage
 
 ```
 sudo sync-rclone config
@@ -15,9 +15,9 @@ sudo sync-rclone dir
 ```
 
 
-## Construção do pacote 
+## Package build
 
 ```
-dpkg-deb --build ~/rclone-sync-package
+dpkg-deb --build ./rclone-sync-package
 ```
 

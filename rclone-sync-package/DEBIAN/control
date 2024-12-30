@@ -1,10 +1,10 @@
 Package: rclone-sync
-Version: 1.0
+Version: 0.1
 Section: base
 Priority: optional
 Architecture: all
-Maintainer: Felipe Lustosa <felipe.lustosa@gmail.com>
+Maintainer: Felipe Lustosa <https://github.com/flustosa>
 Depends: rclone, inotify-tools
-Description: Serviço de sincronização de diretórios usando inotify e rclone
- Este pacote instala um serviço para sincronizar diretórios com o Google Drive usando inotify e rclone.
+Description: Directory sync service using inotify and rclone
+ This package installs a service to synchronize directories with Google Drive using inotify and rclone.
 

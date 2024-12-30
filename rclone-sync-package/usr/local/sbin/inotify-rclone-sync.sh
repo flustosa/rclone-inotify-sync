@@ -1,24 +1,22 @@
 #!/bin/bash
 
-# Arquivo de configuração
+# Configuration file
 CONFIG_FILE="/etc/rclone-sync/sync.conf"
 RCLONE_CONFIG="/root/.config/rclone/rclone.conf" 
 
 
-# Ler o arquivo de configuração
+# Read the configuration file
 while IFS=' ' read -r local_dir remote_dir; do
 	[[ "$local_dir" =~ ^#.*$ ]] && continue
-    # Verifica se a linha não está vazia
+    # Ignore lines starting with '#' or that are empty
     [ -z "$local_dir" ] && continue
 
-    # Monitorar cada diretório listado no arquivo de configuração
+    # Monitor each directory listed in the configuration file
     /usr/bin/inotifywait -m -r -e modify,create,delete,move "$local_dir" |
     while read -r directory events filename; do
-        # Executar o comando de sincronização do rclone
 		/usr/bin/rclone sync -v --config "$RCLONE_CONFIG" "$local_dir" "$remote_dir" --syslog ## Loglevel: default (Error, Notice); -q (E); -v (E, N, I), -vv (E, N, I, D)
     done &
 done < "$CONFIG_FILE"
 
-# Aguardar todos os processos de monitoração
 wait
 

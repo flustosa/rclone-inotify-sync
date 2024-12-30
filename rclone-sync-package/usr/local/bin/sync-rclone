@@ -12,7 +12,7 @@ confirm () {
 
 check_sudo() {
 	if [ ! `whoami` = root ]; then
-		echo "Para configurar o serviço, é necessário executar o comando como root!"
+		echo "Sudo ir required to create the configuration file!"
 		exit
 	fi
 }
@@ -22,33 +22,32 @@ case "$1" in
 		check_sudo
         if [ ! -f "$RCLONE_CONFIG" ]; then
         	if [ ! -f "$RCLONE_LOCAL_CONFIG" ]; then
-				echo "Arquivo de configuração do rclone não encontrado. Iniciando configuração..."
+				echo "Rclone configuration file not found. Starting configuration..."
             	rclone config
 			else
-				echo -e "Foi encontrado um arquivo de configuração do rclone para o usuário atual.\nDeseja copiá-lo para uso como root? [Y/n]"
+				echo -e "An rclone configuration file for the current user was found.\nDo you want to copy it for use as root? [Y/n]"
 				if confirm; then
 					mkdir /root/.config/rclone
 					cp $RCLONE_LOCAL_CONFIG /root/.config/rclone/rclone.conf
 				else
-					echo "Arquivo de configuração do rclone não encontrado. Iniciando configuração..."
+					echo "Rclone configuration file not found. Starting configuration..."
 					rclone config
 				fi
 			fi
-				#echo "É necessário configurar o rclone para iniciar o serviço, execute novamente e conclua a configuração"
        	else
-	   		echo "Arquivo de configuração do rclone já existe."
+	   		echo "Rclone configuration file already exists."
         fi
         ;;
     dir)
-		echo "A partir da lista de locais remotos, configure um novo diretório para incluir no sync"
+		echo "From the list of remote locations, configure a new directory to include in the sync"
 		rclone listremotes
-        read -p "Digite o diretório local: " local_dir
-        read -p "Digite o diretório remoto: " remote_dir
+        read -p "Enter the local directory: " local_dir
+        read -p "Enter the remote directory: " remote_dir
         echo "$local_dir $remote_dir" >> "$CONFIG_FILE"
-        echo "Diretórios adicionados à configuração."
+        echo "Directories added to configuration."
         ;;
     *)
-        echo "Uso: sync-rclone {config|dir}"
+        echo "Usage: sync-rclone {config|dir}"
         exit 1
         ;;
 esac
