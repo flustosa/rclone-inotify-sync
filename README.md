@@ -7,8 +7,17 @@
 sudo dpkg -i rclone-sync-package.deb
 ```
 
-## Compilação
+## Uso
 
 ```
-sudo dpkg -i ~/rclone-sync-package.deb
+sudo sync-rclone config
+sudo sync-rclone dir
 ```
+
+
+## Construção do pacote 
+
+```
+dpkg-deb --build ~/rclone-sync-package
+```
+
